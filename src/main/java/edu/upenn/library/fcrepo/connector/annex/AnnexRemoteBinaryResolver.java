@@ -45,13 +45,12 @@ public class AnnexRemoteBinaryResolver implements RemoteBinaryResolver {
     private static final String CLASS_PROPNAME = "class";
 
     public AnnexRemoteBinaryResolver(Properties props) {
-        this.arf = new S3AnnexResolverFactory();
+        try {
+            this.arf = (AnnexResolverFactory) Class.forName(props.getProperty(CLASS_PROPNAME)).newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        }
         arf.initialize(props);
-//        try {
-//            this.arf = (AnnexResolverFactory) Class.forName(props.getProperty(CLASS_PROPNAME)).newInstance();
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-//            throw new RuntimeException(ex);
-//        }
     }
     
     private static String idForFile(File f) {

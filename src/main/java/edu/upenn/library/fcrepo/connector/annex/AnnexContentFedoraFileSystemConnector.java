@@ -56,9 +56,7 @@ public class AnnexContentFedoraFileSystemConnector extends FedoraFileSystemConne
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             props.load(reader);
         }
-        System.err.println("loading rbr");
         remoteBinaryResolver = new AnnexRemoteBinaryResolver(props);
-        System.err.println("loaded rbr");
     }
 
     @Override
