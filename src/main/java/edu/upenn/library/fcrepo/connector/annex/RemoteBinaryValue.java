@@ -50,7 +50,7 @@ public class RemoteBinaryValue extends ExternalBinaryValue implements ChecksumGe
 
     @Override
     public URI resolve() {
-        return remoteResourceResolver.resolve();
+        return remoteResourceResolver == null ? null : remoteResourceResolver.resolve();
     }
     
 }

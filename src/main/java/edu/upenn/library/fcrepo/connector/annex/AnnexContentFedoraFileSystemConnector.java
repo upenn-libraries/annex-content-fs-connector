@@ -16,9 +16,11 @@
 package edu.upenn.library.fcrepo.connector.annex;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Properties;
 import javax.jcr.NamespaceRegistry;
 import javax.jcr.RepositoryException;
 import org.fcrepo.connector.file.FedoraFileSystemConnector;
@@ -44,11 +46,19 @@ public class AnnexContentFedoraFileSystemConnector extends FedoraFileSystemConne
     private static final Logger LOGGER = LoggerFactory.getLogger(AnnexContentFedoraFileSystemConnector.class);
 
     private RemoteBinaryResolver remoteBinaryResolver;
+    
+    private static final String CONFIG_FILE = "annexRemoteBinaryResolver.properties";
 
     @Override
     public void initialize(NamespaceRegistry registry, NodeTypeManager nodeTypeManager) throws IOException {
         super.initialize(registry, nodeTypeManager);
-        remoteBinaryResolver = new AnnexRemoteBinaryResolver();
+        Properties props = new Properties();
+        try (FileReader reader = new FileReader(CONFIG_FILE)) {
+            props.load(reader);
+        }
+        System.err.println("loading rbr");
+        remoteBinaryResolver = new AnnexRemoteBinaryResolver(props);
+        System.err.println("loaded rbr");
     }
 
     @Override

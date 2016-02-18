@@ -16,6 +16,9 @@
 package edu.upenn.library.fcrepo.connector.annex;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,13 +26,20 @@ import java.net.URI;
  */
 class S3AnnexResolver extends AnnexResolver {
 
-    public S3AnnexResolver(String objectId) {
+    private final String bucket;
+    
+    public S3AnnexResolver(String objectId, String bucket) {
         super(objectId);
+        this.bucket = bucket;
     }
 
     @Override
     public URI resolve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return new URI("http://ceph01.library.upenn.edu/test/"+annexId);
+        } catch (URISyntaxException ex) {
+            return null;
+        }
     }
     
 }

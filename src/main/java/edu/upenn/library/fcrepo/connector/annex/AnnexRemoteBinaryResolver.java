@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.Properties;
 import javax.jcr.RepositoryException;
 import org.fcrepo.kernel.api.utils.ContentDigest;
 import org.modeshape.common.util.SecureHash;
@@ -39,6 +40,20 @@ public class AnnexRemoteBinaryResolver implements RemoteBinaryResolver {
     private static final int HEX_CHECKSUM_LENGTH = SecureHash.Algorithm.SHA_256.getHexadecimalStringLength();
     private static final int SHA1_HEX_CHECKSUM_LENGTH = SecureHash.Algorithm.SHA_1.getHexadecimalStringLength();
 
+    private final AnnexResolverFactory arf;
+
+    private static final String CLASS_PROPNAME = "class";
+
+    public AnnexRemoteBinaryResolver(Properties props) {
+        this.arf = new S3AnnexResolverFactory();
+        arf.initialize(props);
+//        try {
+//            this.arf = (AnnexResolverFactory) Class.forName(props.getProperty(CLASS_PROPNAME)).newInstance();
+//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+//            throw new RuntimeException(ex);
+//        }
+    }
+    
     private static String idForFile(File f) {
         try {
             return f.toURI().toURL().toExternalForm();
@@ -95,7 +110,12 @@ public class AnnexRemoteBinaryResolver implements RemoteBinaryResolver {
         Modeshape need never know that this is simply a truncated SHA-256 checksum.
          */
         String binaryKeySha1Equivalent = nativeChecksum.substring(0, SHA1_HEX_CHECKSUM_LENGTH);
-        return new RemoteBinaryMetadata(id, binaryKeySha1Equivalent, checksumURI, size, mimeType, new S3AnnexResolver(annexId));
+        return new RemoteBinaryMetadata(id, binaryKeySha1Equivalent, checksumURI, size, mimeType, arf.getAnnexResolver(annexId));
+    }
+    
+    public static interface AnnexResolverFactory {
+        void initialize(Properties props);
+        AnnexResolver getAnnexResolver(String annexId);
     }
     
 }
