@@ -47,13 +47,13 @@ public class AnnexContentFedoraFileSystemConnector extends FedoraFileSystemConne
 
     private RemoteBinaryResolver remoteBinaryResolver;
     
-    private static final String CONFIG_FILE = "annexRemoteBinaryResolver.properties";
+    private String remoteResolverConfigFile;
 
     @Override
     public void initialize(NamespaceRegistry registry, NodeTypeManager nodeTypeManager) throws IOException {
         super.initialize(registry, nodeTypeManager);
         Properties props = new Properties();
-        try (FileReader reader = new FileReader(CONFIG_FILE)) {
+        try (FileReader reader = new FileReader(remoteResolverConfigFile)) {
             props.load(reader);
         }
         remoteBinaryResolver = new AnnexRemoteBinaryResolver(props);

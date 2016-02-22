@@ -22,7 +22,8 @@
         "readonly" : true,
         "extraPropertiesStorage": "json",
         "cacheTtlSeconds" : 5,
-        "projections" : [ "default:/files => /" ]
+        "projections" : [ "default:/files => /" ],
+        "remoteResolverConfigFile" : "annexRemoteBinaryResolver.properties"
       }
     },
     "security" : {
