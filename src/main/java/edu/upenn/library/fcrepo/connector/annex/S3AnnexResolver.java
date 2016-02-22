@@ -16,7 +16,7 @@
 package edu.upenn.library.fcrepo.connector.annex;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Map;
 
 /**
  *
@@ -32,8 +32,8 @@ class S3AnnexResolver extends AnnexResolver {
     }
 
     @Override
-    public URI resolve() {
-        return sarf.getObjectURI(annexId);
+    public URI resolve(Map<String, String> remoteResponseHeaderHints) {
+        return sarf.getObjectURI(annexId, remoteResponseHeaderHints);
     }
 
 }

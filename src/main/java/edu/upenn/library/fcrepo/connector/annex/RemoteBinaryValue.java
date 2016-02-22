@@ -18,6 +18,7 @@ package edu.upenn.library.fcrepo.connector.annex;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
 import org.fcrepo.kernel.api.models.ChecksumGeneralizedResource;
 import org.fcrepo.kernel.api.models.RemoteResource;
 import org.modeshape.jcr.value.BinaryKey;
@@ -49,8 +50,8 @@ public class RemoteBinaryValue extends ExternalBinaryValue implements ChecksumGe
     }
 
     @Override
-    public URI resolve() {
-        return remoteResourceResolver == null ? null : remoteResourceResolver.resolve();
+    public URI resolve(Map<String, String> remoteResponseHeaderHints) {
+        return remoteResourceResolver == null ? null : remoteResourceResolver.resolve(remoteResponseHeaderHints);
     }
     
 }

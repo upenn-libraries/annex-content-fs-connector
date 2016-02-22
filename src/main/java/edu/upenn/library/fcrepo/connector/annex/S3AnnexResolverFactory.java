@@ -22,10 +22,13 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import java.util.Properties;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 
 public class S3AnnexResolverFactory implements AnnexRemoteBinaryResolver.AnnexResolverFactory {
@@ -62,8 +65,10 @@ public class S3AnnexResolverFactory implements AnnexRemoteBinaryResolver.AnnexRe
         conn.setEndpoint(props.getProperty(ENDPOINT_PROPNAME));
     }
 
-    public URI getObjectURI(String annexId) {
+    public URI getObjectURI(String annexId, Map<String, String> remoteResponseHeaderHints) {
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, annexId);
+        request.addRequestParameter(ResponseHeaderOverrides.RESPONSE_HEADER_CONTENT_TYPE, remoteResponseHeaderHints.get(Headers.CONTENT_TYPE));
+        request.addRequestParameter(ResponseHeaderOverrides.RESPONSE_HEADER_CONTENT_DISPOSITION, remoteResponseHeaderHints.get(Headers.CONTENT_DISPOSITION));
         try {
             return conn.generatePresignedUrl(request).toURI();
         } catch (URISyntaxException ex) {
