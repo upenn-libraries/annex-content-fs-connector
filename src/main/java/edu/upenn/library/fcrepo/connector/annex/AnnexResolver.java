@@ -38,7 +38,6 @@ public abstract class AnnexResolver implements RemoteResource {
         } catch (NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         }
-        System.err.println(SecureHash.asHexString(hash));
         int start = sb.length();
         appendPrefix(ByteBuffer.wrap(hash, 0, 4).getInt(), sb);
         sb.append(annexId);
